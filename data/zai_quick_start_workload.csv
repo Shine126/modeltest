@@ -1,0 +1,15 @@
+模块,任务,描述,工作量(人天),优先级,负责人,截止日期,依赖,状态,产出物,来源链接,备注
+概览与信息架构,对齐信息架构,对齐 Quick Start 结构与内部文档模板,1,高,,,,"未开始",信息架构大纲,https://docs.z.ai/guides/overview/quick-start,
+API与端点,编写端点差异说明,明确 Coding 端点与通用端点的适用场景及限制,0.5,高,,,,"未开始",端点差异说明页,"https://docs.z.ai/guides/overview/quick-start; https://api.z.ai/api/coding/paas/v4; https://api.z.ai/api/paas/v4",需要标注“仅限编码场景”
+API与端点,校验请求示例与Headers,校验 Authorization/API Key、Content-Type、Accept-Language 示例,0.5,中,,,编写端点差异说明,未开始,标准化请求示例,https://docs.z.ai/guides/overview/quick-start,
+示例与SDK,curl示例完善,提供 chat completions 的 curl 示例（glm-4.6）并可复制,0.5,高,,,校验请求示例与Headers,未开始,curl示例段落,https://docs.z.ai/guides/overview/quick-start,
+示例与SDK,Python示例,提供 Python 快速集成示例（环境、依赖、调用）,0.8,中,,,校验请求示例与Headers,未开始,Python示例代码,https://docs.z.ai/guides/overview/quick-start,
+示例与SDK,JavaScript示例,提供 JS/Node 快速集成示例（依赖、调用）,0.7,中,,,校验请求示例与Headers,未开始,JavaScript示例代码,https://docs.z.ai/guides/overview/quick-start,
+示例与SDK,错误码与重试策略,整理常见 HTTP/业务错误、重试与退避策略,0.5,中,,,curl示例完善,未开始,错误码与重试指南,https://docs.z.ai/guides/overview/quick-start,
+合规与限制,速率限制与配额,说明限流/配额/最佳实践,0.5,中,,,API与端点,未开始,速率限制章节,https://docs.z.ai/guides/overview/quick-start,
+合规与限制,密钥管理与安全,介绍密钥存储/轮换/最小权限,0.5,中,,,API与端点,未开始,安全实践章节,https://docs.z.ai/guides/overview/quick-start,
+本地化与风格,多语言版本,提供中英两版并保证术语一致,1,中,,,示例与SDK,未开始,中文/英文版文档,https://docs.z.ai/guides/overview/quick-start,
+本地化与风格,风格与排版统一,统一标题层级、代码块、术语,0.5,低,,,概览与信息架构,未开始,风格指南应用,https://docs.z.ai/guides/overview/quick-start,
+QA与发布,技术验证与自测,对示例逐条执行验证接口可用性,1,高,,,示例与SDK,未开始,测试记录与截图,https://docs.z.ai/guides/overview/quick-start,
+QA与发布,法务/合规审核,进行合规与法务条目审阅,0.5,中,,,合规与限制,未开始,合规确认记录,https://docs.z.ai/guides/overview/quick-start,
+QA与发布,发布与变更日志,编写发布步骤与变更历史,0.5,中,,,技术验证与自测,未开始,发布清单与CHANGELOG,https://docs.z.ai/guides/overview/quick-start,
