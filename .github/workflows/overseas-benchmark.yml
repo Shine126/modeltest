@@ -1,0 +1,102 @@
+name: Sekai Overseas Benchmark
+# 从 GitHub Actions 美国节点发起测试，模拟北美客户链路
+# 手动触发：GitHub repo → Actions → Run workflow
+# 三个 job 并行：deepseek / glm / kimi，各自独立运行
+
+on:
+  workflow_dispatch:
+    inputs:
+      rounds:
+        description: 'Rounds per combo'
+        required: false
+        default: '2'
+      thinking:
+        description: 'Thinking modes (comma-separated)'
+        required: false
+        default: 'disabled'
+
+jobs:
+  deepseek:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - name: Verify location & network
+        run: |
+          echo "IP: $(curl -s ifconfig.me)"
+          echo "Location: $(curl -s ipinfo.io | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d.get("city","?"), d.get("region","?"), d.get("country","?"))')"
+          curl -s -o /dev/null -w "DeepSeek TCP+TLS: %{time_appconnect}s\n" https://api.deepseek.com/
+      - name: Run DeepSeek benchmark
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: |
+          cd sekai
+          python3 benchmark_sekai_overseas_deepseek.py \
+            --rounds ${{ github.event.inputs.rounds }} \
+            --thinking ${{ github.event.inputs.thinking }} \
+            --lang en
+      - uses: actions/upload-artifact@v4
+        with:
+          name: overseas-deepseek
+          path: sekai/results/overseas/deepseek/
+          retention-days: 30
+
+  glm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - name: Verify location & network
+        run: |
+          echo "IP: $(curl -s ifconfig.me)"
+          echo "Location: $(curl -s ipinfo.io | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d.get("city","?"), d.get("region","?"), d.get("country","?"))')"
+          curl -s -o /dev/null -w "GLM Overseas TCP+TLS: %{time_appconnect}s\n" https://api.z.ai/
+      - name: Run GLM benchmark
+        env:
+          GLM_API_KEY: ${{ secrets.GLM_API_KEY }}
+        run: |
+          cd sekai
+          python3 benchmark_sekai_overseas_glm.py \
+            --rounds ${{ github.event.inputs.rounds }} \
+            --thinking ${{ github.event.inputs.thinking }} \
+            --lang en
+      - uses: actions/upload-artifact@v4
+        with:
+          name: overseas-glm
+          path: sekai/results/overseas/glm/
+          retention-days: 30
+
+  kimi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - name: Verify location & network
+        run: |
+          echo "IP: $(curl -s ifconfig.me)"
+          echo "Location: $(curl -s ipinfo.io | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d.get("city","?"), d.get("region","?"), d.get("country","?"))')"
+          curl -s -o /dev/null -w "Kimi CN TCP+TLS: %{time_appconnect}s\n" https://api.moonshot.cn/
+          curl -s -o /dev/null -w "Kimi Intl TCP+TLS: %{time_appconnect}s\n" https://api.moonshot.ai/
+      - name: Run Kimi benchmark
+        env:
+          KIMI_API_KEY: ${{ secrets.KIMI_API_KEY }}
+        run: |
+          cd sekai
+          python3 benchmark_sekai_overseas_kimi.py \
+            --rounds ${{ github.event.inputs.rounds }} \
+            --thinking ${{ github.event.inputs.thinking }} \
+            --lang en
+      - uses: actions/upload-artifact@v4
+        with:
+          name: overseas-kimi
+          path: sekai/results/overseas/kimi/
+          retention-days: 30
