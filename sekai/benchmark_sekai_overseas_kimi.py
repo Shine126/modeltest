@@ -245,7 +245,6 @@ def call_api(model, prompt_type, thinking, lang, config):
         "messages": messages,
         config["max_tokens_field"]: config["max_tokens"],
         "temperature": 0.6,
-        "top_p": 0.9,
         "stream": True,
     }
 
