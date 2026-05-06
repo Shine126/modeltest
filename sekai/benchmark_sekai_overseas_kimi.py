@@ -244,7 +244,7 @@ def call_api(model, prompt_type, thinking, lang, config):
         "model": model,
         "messages": messages,
         config["max_tokens_field"]: config["max_tokens"],
-        "temperature": 0.6,
+        "temperature": 1 if thinking == "enabled" else 0.6,
         "stream": True,
     }
 
