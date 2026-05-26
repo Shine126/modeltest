@@ -1,0 +1,64 @@
+name: GPT-5.x TTFT Benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      rounds:
+        description: 'Rounds per test'
+        required: false
+        default: '10'
+
+jobs:
+  north-america:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify location & network
+        run: |
+          echo "IP: $(curl -s ifconfig.me)"
+          echo "Location: $(curl -s ipinfo.io | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d.get("city","?"), d.get("region","?"), d.get("country","?"))')"
+          curl -s -o /dev/null -w "Z.AI Router TCP+TLS handshake: %{time_appconnect}s\n" https://router.z.ai/
+      - name: Run GPT-5.x TTFT Benchmark (NA)
+        env:
+          ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
+        run: |
+          cd sekai
+          python3 benchmark_ttft_gpt5.py --rounds ${{ github.event.inputs.rounds }} --region na
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gpt5-ttft-na
+          path: sekai/results/gpt5-ttft/na/
+          retention-days: 30
+
+  # NOTE: Japan job requires a self-hosted runner in Japan.
+  # Options: (1) Set up a self-hosted runner on a Japan VPS (e.g., AWS ap-northeast-1)
+  #          (2) Use GitHub-hosted larger runners with Japan East region (requires GitHub Team plan)
+  # To enable: change runs-on below to [self-hosted, linux, japan] after setting up the runner.
+  japan:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify location & network
+        run: |
+          echo "=== NOTE: This runner is in the US. For real Japan testing, use a self-hosted runner. ==="
+          echo "IP: $(curl -s ifconfig.me)"
+          echo "Location: $(curl -s ipinfo.io | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d.get("city","?"), d.get("region","?"), d.get("country","?"))')"
+          curl -s -o /dev/null -w "Z.AI Router TCP+TLS handshake: %{time_appconnect}s\n" https://router.z.ai/
+      - name: Run GPT-5.x TTFT Benchmark (Japan)
+        env:
+          ZAI_API_KEY: ${{ secrets.ZAI_API_KEY }}
+        run: |
+          cd sekai
+          python3 benchmark_ttft_gpt5.py --rounds ${{ github.event.inputs.rounds }} --region japan
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gpt5-ttft-japan
+          path: sekai/results/gpt5-ttft/japan/
+          retention-days: 30
